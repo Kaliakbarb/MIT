@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- bol-theme-boot -->
+    <script>(function(){try{var t=localStorage.getItem("bolTheme")||"dark";document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","dark");}})();</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SYNERA - Прогноз кардиориска</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="app.css">
+    <link rel="stylesheet" href="ecg-analysis.css">
+    <link rel="icon" href="/favicon.ico">
+    <script src="theme.js" defer></script>
+    <script src="app-shell.js" defer></script>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a class="logo" href="/app">
+                    <img src="logo.png" alt="SYNERA logo" class="brand-logo-image">
+                    <span>SYNERA</span>
+                </a>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-item"><a href="/app"><i class="fas fa-grip"></i><span>Обзор</span></a></li>
+                    <li class="nav-item"><a href="patients.html"><i class="fas fa-users"></i><span>Пациенты</span></a></li>
+                    <li class="nav-item active"><a href="ecg-analysis.html"><i class="fas fa-heart-pulse"></i><span>ЭКГ-анализ</span></a></li>
+                    <li class="nav-item"><a href="reports.html"><i class="fas fa-chart-line"></i><span>Отчёты</span></a></li>
+                    <li class="nav-item"><a href="methodology.html"><i class="fas fa-flask"></i><span>Методология</span></a></li>
+                    <li class="nav-item"><a href="settings.html"><i class="fas fa-gear"></i><span>Настройки</span></a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-foot">
+                <a href="/" title="На сайт"><i class="fas fa-arrow-up-right-from-square"></i><span>Сайт SYNERA</span></a>
+                <a data-cmdk href="#"><i class="fas fa-magnifying-glass"></i><span>Поиск&nbsp;&nbsp;<kbd style="font-size:11px;color:var(--text-4);border:1px solid var(--border);border-radius:5px;padding:1px 6px;margin-left:auto">⌘K</kbd></span></a>
+            </div>
+        </aside>
+
+        <!-- Main -->
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="top-bar-left">
+                    <a class="logo-mobile" href="/app"><img src="logo.png" alt="SYNERA" class="brand-logo-image"><span>SYNERA</span></a>
+                    <span class="crumb"><b>ЭКГ-анализ</b><i class="fas fa-chevron-right" style="font-size:10px;color:var(--text-4)" aria-hidden="true"></i> Прогноз кардиориска</span>
+                </div>
+                <div class="top-bar-right">
+                    <button class="icon-btn" data-cmdk aria-label="Поиск (⌘K)"><i class="fas fa-magnifying-glass" aria-hidden="true"></i></button>
+                    <div class="user-profile">
+                        <div class="user-avatar"><i class="fas fa-user-md" aria-hidden="true"></i></div>
+                        <div class="user-info">
+                            <span class="user-name">Др. Айдар Т.</span>
+                            <span class="user-role">Врач-диагност</span>
+                        </div>
+                        <button class="logout-btn" aria-label="Выйти"><i class="fas fa-arrow-right-from-bracket" aria-hidden="true"></i></button>
+                    </div>
+                </div>
+            </header>
+
+            <div class="ecg-page">
+                <section class="ecg-head reveal">
+                    <div>
+                        <span class="eyebrow">Cardiac risk forecast</span>
+                        <h1>Прогноз <span class="grad">кардиориска</span></h1>
+                        <p class="ecg-head-sub">Загрузите 12-отведённую ЭКГ — модель вернёт класс ритма, 10-летний прогноз риска и объяснимый разбор.</p>
+                    </div>
+                </section>
+
+                <div class="ecg-workspace">
+                    <!-- Step 01 — Upload -->
+                    <section class="panel upload-card reveal">
+                        <div class="panel-head">
+                            <div>
+                                <span class="eyebrow">Шаг 01</span>
+                                <h2>Загрузка ЭКГ</h2>
+                            </div>
+                            <i class="fas fa-cloud-arrow-up panel-head-ico" aria-hidden="true"></i>
+                        </div>
+
+                        <div class="panel-pad">
+                            <div class="patient-link-panel">
+                                <label class="field-label" for="patientSelect">Пациент</label>
+                                <select id="patientSelect" class="patient-select"></select>
+                                <div class="selected-patient-card" id="selectedPatientCard">
+                                    <div class="clinical-avatar" id="selectedPatientAvatar">-</div>
+                                    <div>
+                                        <strong id="selectedPatientName">Пациент не выбран</strong>
+                                        <span id="selectedPatientMeta">Выберите пациента перед анализом</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="sample-loader" id="sampleLoader">
+                                <label class="field-label" for="sampleSelect">Или попробовать пример:</label>
+                                <select id="sampleSelect" class="patient-select">
+                                    <option value="">— выбрать запись PTB-XL —</option>
+                                </select>
+                                <button type="button" class="btn btn-outline" id="sampleLoadBtn" disabled>
+                                    Загрузить и проанализировать
+                                </button>
+                            </div>
+
+                            <div class="upload-area signal-upload" id="signalUploadArea" role="button" tabindex="0" aria-label="Загрузить файл ЭКГ — фото, .npy или .csv">
+                                <input type="file" id="signalFileInput" accept=".npy,.csv,.txt,image/*">
+                                <div class="upload-icon-shell">
+                                    <i class="fas fa-heart-pulse" aria-hidden="true"></i>
+                                </div>
+                                <h3>Перетащите ЭКГ — фото, .npy или .csv</h3>
+                                <p>Фото бумажной ЭКГ <strong>(эксперим. оцифровка)</strong>, сырой сигнал <code>.npy</code>, или <code>.csv</code> из 12 столбцов (I, II, III, aVR, aVL, aVF, V1–V6). Любой формат анализируется сигнальной моделью. Или нажмите «попробовать пример» выше.</p>
+                                <div class="upload-file-state" id="signalFileState">
+                                    <i class="fas fa-circle-check" aria-hidden="true"></i>
+                                    <span id="signalFileName">Файл не выбран</span>
+                                </div>
+                            </div>
+
+                            <div class="preview-container" id="previewContainer">
+                                <div class="preview-toolbar">
+                                    <span>ECG preview</span>
+                                    <span id="fileSize">Ready for analysis</span>
+                                </div>
+                                <img id="previewImage" class="preview-image" alt="Предпросмотр ЭКГ">
+                            </div>
+
+                            <div class="signal-preview-card" id="signalPreviewCard" hidden>
+                                <div class="signal-preview-row">
+                                    <span class="signal-preview-icon" aria-hidden="true"><i class="fas fa-wave-square"></i></span>
+                                    <div class="signal-preview-meta">
+                                        <strong id="signalPreviewName">—</strong>
+                                        <small id="signalPreviewMeta">12 отведений · 1000 отсчётов · 10 с @ 100 Гц</small>
+                                    </div>
+                                    <span class="signal-preview-tag">signal</span>
+                                </div>
+                            </div>
+
+                            <div class="risk-factors-coachmark" id="riskFactorsHint" role="note">
+                                <span class="risk-factors-coachmark-icon" aria-hidden="true">!</span>
+                                <div class="risk-factors-coachmark-body">
+                                    <strong>Сначала заполните факторы риска пациента</strong>
+                                    <small>Без них 10-летний прогноз кардиориска не считается. Это делается на карточке пациента.</small>
+                                </div>
+                                <a class="risk-factors-coachmark-cta" id="riskFactorsCta" href="patients.html">
+                                    Заполнить →
+                                </a>
+                            </div>
+
+                            <button class="btn btn-primary analyze-cta" id="analyzeBtn" disabled>
+                                <i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i>
+                                <span>Анализировать ЭКГ</span>
+                            </button>
+                        </div>
+                    </section>
+
+                    <!-- Step 02 — Result -->
+                    <section class="panel result-panel reveal">
+                        <div class="panel-head">
+                            <div>
+                                <span class="eyebrow">Шаг 02</span>
+                                <h2>Прогноз риска</h2>
+                            </div>
+                            <i class="fas fa-file-medical panel-head-ico" aria-hidden="true"></i>
+                        </div>
+
+                        <div class="panel-pad">
+                            <div class="loading analysis-loading" id="loading">
+                                <div class="analysis-orbit" aria-hidden="true">
+                                    <div class="spinner"></div>
+                                    <i class="fas fa-heart-pulse"></i>
+                                </div>
+                                <p class="loading-title" id="loadingTitle">Подготовка ЭКГ</p>
+                                <div class="loading-steps">
+                                    <span class="loading-step active" data-stage="upload">Подготовка ЭКГ</span>
+                                    <span class="loading-step" data-stage="analysis">Классификация ритма</span>
+                                    <span class="loading-step" data-stage="summary">Формирование заключения</span>
+                                </div>
+                            </div>
+
+                            <div id="placeholder" class="result-placeholder">
+                                <i class="fas fa-stethoscope" aria-hidden="true"></i>
+                                <h3>Готово к анализу</h3>
+                                <p>После загрузки ЭКГ здесь появится клинический summary, вероятности и отчёт для PDF.</p>
+                            </div>
+
+                            <article class="result-card" id="resultCard">
+                                <header class="result-card-header">
+                                    <div>
+                                        <span class="eyebrow">Выделенный паттерн</span>
+                                        <h3 id="resultClass">-</h3>
+                                    </div>
+                                </header>
+
+                                <div class="uncertainty-row">
+                                    <div class="uncertainty-pill" id="uncertaintyPill" role="status" aria-live="polite" hidden>
+                                        <span class="uncertainty-icon" id="uncertaintyIcon" aria-hidden="true">●</span>
+                                        <span id="uncertaintyText"></span>
+                                    </div>
+                                    <div class="uncertainty-pill ensemble-pill" id="ensemblePill" role="status" aria-live="polite" hidden>
+                                        <span class="uncertainty-icon" id="ensembleIcon" aria-hidden="true">σ</span>
+                                        <span id="ensembleText"></span>
+                                    </div>
+                                </div>
+
+                                <div class="result-dashboard result-dashboard--dual">
+                                    <div class="confidence-meter" id="confidenceRing" role="img" aria-label="Pattern confidence not computed yet">
+                                        <svg viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+                                            <circle class="confidence-track" cx="60" cy="60" r="52"></circle>
+                                            <circle class="confidence-progress" id="confidenceProgress" cx="60" cy="60" r="52"></circle>
+                                        </svg>
+                                        <div class="confidence-ring-inner">
+                                            <strong id="resultConfidence">0%</strong>
+                                            <span>уверенность</span>
+                                        </div>
+                                    </div>
+                                    <div class="confidence-meter risk-meter" id="riskRing" role="img" aria-label="10-year risk forecast unavailable">
+                                        <svg viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+                                            <circle class="confidence-track" cx="60" cy="60" r="52"></circle>
+                                            <circle class="confidence-progress" id="riskProgress" cx="60" cy="60" r="52"></circle>
+                                        </svg>
+                                        <div class="confidence-ring-inner">
+                                            <strong id="riskValue">—</strong>
+                                            <span>риск 10 лет</span>
+                                        </div>
+                                    </div>
+                                    <div class="diagnosis-summary" id="resultMain">
+                                        <span class="diagnosis-label">Описание</span>
+                                        <p id="resultDescription"></p>
+                                        <p class="risk-breakdown" id="riskBreakdown"></p>
+                                    </div>
+                                </div>
+
+                                <figure class="signal-chart-figure" id="signalChartFigure" hidden>
+                                    <figcaption>
+                                        <strong>ЭКГ: 12 отведений (10 секунд @ 100 Гц)</strong>
+                                        <small>То, что модель видит на входе</small>
+                                    </figcaption>
+                                    <div class="signal-chart-grid" id="signalChartGrid"></div>
+                                </figure>
+
+                                <section class="intervals-panel" id="intervalsPanel" hidden aria-live="polite">
+                                    <div class="report-section-title">
+                                        <span>ЭКГ-интервалы</span>
+                                        <small>оценка @ 100 Гц · PR/QRS/QT/QTc ≈ ±10 мс</small>
+                                    </div>
+                                    <div class="intervals-grid" id="intervalsGrid">
+                                        <div class="interval-tile">
+                                            <span class="interval-label">ЧСС</span>
+                                            <strong class="interval-value" id="intHeartRate">—</strong>
+                                            <span class="interval-unit">уд/мин</span>
+                                        </div>
+                                        <div class="interval-tile">
+                                            <span class="interval-label">PR</span>
+                                            <strong class="interval-value" id="intPr">—</strong>
+                                            <span class="interval-unit">мс</span>
+                                        </div>
+                                        <div class="interval-tile">
+                                            <span class="interval-label">QRS</span>
+                                            <strong class="interval-value" id="intQrs">—</strong>
+                                            <span class="interval-unit">мс</span>
+                                        </div>
+                                        <div class="interval-tile">
+                                            <span class="interval-label">QT</span>
+                                            <strong class="interval-value" id="intQt">—</strong>
+                                            <span class="interval-unit">мс</span>
+                                        </div>
+                                        <div class="interval-tile" id="intQtcTile">
+                                            <span class="interval-label">QTc</span>
+                                            <strong class="interval-value" id="intQtc">—</strong>
+                                            <span class="interval-unit">мс · Bazett</span>
+                                        </div>
+                                        <div class="interval-tile">
+                                            <span class="interval-label">Эл. ось</span>
+                                            <strong class="interval-value" id="intAxis">—</strong>
+                                            <span class="interval-unit" id="intAxisLabel">—</span>
+                                        </div>
+                                        <div class="interval-tile">
+                                            <span class="interval-label">Ритм</span>
+                                            <strong class="interval-value" id="intRhythm">—</strong>
+                                            <span class="interval-unit"> </span>
+                                        </div>
+                                    </div>
+                                    <p class="intervals-note" id="intervalsNote"></p>
+                                </section>
+
+                                <section class="survival-card" id="survivalCard" hidden aria-live="polite">
+                                    <div class="report-section-title">
+                                        <span>Прогноз риска (выживаемость)</span>
+                                        <small>модель CODE-15 · 233k ЭКГ</small>
+                                    </div>
+                                    <div class="survival-body">
+                                        <div class="survival-gauge" id="survivalGauge">
+                                            <span class="survival-gauge-label">риск ≤12 мес</span>
+                                            <strong class="survival-pct" id="survivalPct">—</strong>
+                                            <span class="survival-band" id="survivalBand">—</span>
+                                            <span class="survival-ci" id="survivalCi"></span>
+                                        </div>
+                                        <div class="survival-meta">
+                                            <p class="survival-lede" id="survivalLede">Вероятность события (общая смертность) в течение года по данным ЭКГ.</p>
+                                            <ul class="survival-stats">
+                                                <li><span>× базовый уровень</span><strong id="survivalRatio">—</strong></li>
+                                                <li><span>перцентиль ЭКГ</span><strong id="survivalPctl">—</strong></li>
+                                                <li><span>C-index</span><strong id="survivalCidx">—</strong></li>
+                                                <li><span>AUROC ≤12 мес</span><strong id="survivalAuroc">—</strong></li>
+                                                <li><span>Калибровка ECE</span><strong id="survivalEce">—</strong></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="survival-curve-wrap" id="survivalCurveWrap" hidden>
+                                        <div class="survival-curve-title">Кумулятивный риск со временем <small>оценка модели</small></div>
+                                        <div class="survival-curve" id="survivalCurve" role="img" aria-label="Кривая кумулятивного риска по горизонтам"></div>
+                                    </div>
+                                    <p class="survival-note" id="survivalNote"></p>
+                                    <p class="survival-note" id="survivalAssume" hidden></p>
+                                </section>
+
+                                <figure class="gradcam-figure" id="gradcamFigure" hidden>
+                                    <figcaption>
+                                        <strong>Что повлияло на решение модели</strong>
+                                        <small>
+                                            Grad-CAM — карта значимости пикселей. Красные/жёлтые области — пиксели, которые сильнее всего повлияли на ответ модели; синие — пиксели, которые модель проигнорировала. <em>Это инструмент объяснения, а не подтверждение диагноза.</em>
+                                        </small>
+                                    </figcaption>
+                                    <img id="gradcamImage" alt="Grad-CAM heatmap overlay on the analyzed ECG">
+                                </figure>
+
+                                <section class="probability-section">
+                                    <div class="report-section-title">
+                                        <span>Вероятности паттернов (калиброванные)</span>
+                                        <small>4-class ECG classifier · T-scaled</small>
+                                    </div>
+                                    <div class="probability-list" id="probabilityList"></div>
+                                </section>
+
+                                <section class="conformal-card" id="conformalCard" hidden aria-live="polite">
+                                    <header class="conformal-card-header">
+                                        <span class="conformal-card-kicker" id="conformalKicker">Возможные диагнозы</span>
+                                        <small id="conformalCoverage">90% покрытие</small>
+                                    </header>
+                                    <p class="conformal-card-lede" id="conformalLede">Модель не различает между следующими классами:</p>
+                                    <ul class="conformal-card-list" id="conformalList"></ul>
+                                    <p class="conformal-card-footer" id="conformalFooter">Это «честный» предикативный сет с конформальной гарантией покрытия истинного класса.</p>
+                                </section>
+
+                                <div class="conformal-singleton" id="conformalSingleton" hidden role="status">
+                                    <span class="conformal-singleton-icon" aria-hidden="true">✓</span>
+                                    <span id="conformalSingletonText">Singleton conformal set — модель уверена в одном диагнозе (90% покрытие)</span>
+                                </div>
+
+                                <section class="doctor-recommendation">
+                                    <i class="fas fa-user-doctor" aria-hidden="true"></i>
+                                    <div>
+                                        <span>Рекомендация модели</span>
+                                        <p id="doctorRecommendation">-</p>
+                                    </div>
+                                </section>
+
+                                <section class="disease-panel" id="diseasePanel" hidden>
+                                    <header class="disease-panel-header">
+                                        <div>
+                                            <span class="eyebrow">Детальный разбор</span>
+                                            <h4>Конкретные заболевания на ЭКГ</h4>
+                                            <small id="diseaseMeta">—</small>
+                                        </div>
+                                        <button type="button" class="btn btn-outline disease-llm-btn" id="diseaseLlmBtn" disabled>
+                                            <i class="fas fa-brain" aria-hidden="true"></i>
+                                            <span>Глубокий разбор LLM</span>
+                                        </button>
+                                    </header>
+                                    <div class="disease-superclass" id="diseaseSuperclass" hidden></div>
+                                    <div class="disease-detected" id="diseaseDetected"></div>
+                                    <details class="disease-others" id="diseaseOthers" hidden>
+                                        <summary>Другие проверенные состояния (под порогом)</summary>
+                                        <div class="disease-others-list" id="diseaseOthersList"></div>
+                                    </details>
+                                    <article class="disease-llm-output" id="diseaseLlmOutput" hidden aria-live="polite">
+                                        <header>
+                                            <strong>Глубокий разбор</strong>
+                                            <button type="button" class="llm-copy" id="diseaseLlmCopy" aria-label="Скопировать" title="Скопировать">⧉</button>
+                                            <button type="button" class="llm-close" id="diseaseLlmClose" aria-label="Закрыть">✕</button>
+                                        </header>
+                                        <div id="diseaseLlmBody" class="llm-output-body"></div>
+                                        <footer id="diseaseLlmFooter"></footer>
+                                    </article>
+                                </section>
+
+                                <div class="ai-disclaimer">
+                                    <i class="fas fa-triangle-exclamation" aria-hidden="true"></i>
+                                    <p>AI-оценка риска, не диагноз. Эвристический прогноз: упрощённая формула pooled-cohort + множитель по ЭКГ-паттерну. Не для клинического применения.</p>
+                                </div>
+
+                                <section class="llm-panel" id="llmPanel" hidden>
+                                    <header class="llm-panel-header">
+                                        <div>
+                                            <span class="eyebrow">AI ассистент</span>
+                                            <h4>Сгенерировать на основе результата</h4>
+                                        </div>
+                                        <small id="llmStatusBadge">готово</small>
+                                    </header>
+                                    <div class="llm-actions" id="llmActions">
+                                        <button type="button" class="llm-action" data-fn="clinical_note">
+                                            <span class="llm-action-glyph" aria-hidden="true">📝</span>
+                                            <span class="llm-action-label">
+                                                <strong>Клиническая запись</strong>
+                                                <small>структурированно для карты пациента</small>
+                                            </span>
+                                        </button>
+                                        <button type="button" class="llm-action" data-fn="explain_to_patient">
+                                            <span class="llm-action-glyph" aria-hidden="true">💬</span>
+                                            <span class="llm-action-label">
+                                                <strong>Объяснить пациенту</strong>
+                                                <small>тёплый, простой язык</small>
+                                            </span>
+                                        </button>
+                                        <button type="button" class="llm-action" data-fn="differential">
+                                            <span class="llm-action-glyph" aria-hidden="true">🧠</span>
+                                            <span class="llm-action-label">
+                                                <strong>Диф. диагнозы</strong>
+                                                <small>что ещё подумать рядом</small>
+                                            </span>
+                                        </button>
+                                        <button type="button" class="llm-action llm-action--crazy" data-fn="specialist_panel">
+                                            <span class="llm-action-glyph" aria-hidden="true">🎭</span>
+                                            <span class="llm-action-label">
+                                                <strong>Виртуальный консилиум</strong>
+                                                <small>4 специалиста обсуждают случай</small>
+                                            </span>
+                                        </button>
+                                    </div>
+                                    <article class="llm-output" id="llmOutput" hidden aria-live="polite">
+                                        <header>
+                                            <strong id="llmOutputTitle">—</strong>
+                                            <button type="button" class="llm-copy" id="llmCopyBtn" aria-label="Скопировать" title="Скопировать">⧉</button>
+                                            <button type="button" class="llm-close" id="llmCloseBtn" aria-label="Закрыть">✕</button>
+                                        </header>
+                                        <div id="llmOutputBody" class="llm-output-body"></div>
+                                        <footer id="llmOutputFooter"></footer>
+                                    </article>
+                                </section>
+
+                                <div class="result-actions">
+                                    <button class="btn btn-primary pdf-report-btn" id="downloadReportBtn" disabled>
+                                        <i class="fas fa-file-pdf" aria-hidden="true"></i>
+                                        <span>Скачать PDF</span>
+                                    </button>
+                                    <button class="btn btn-outline" id="downloadFhirBtn" disabled title="Экспорт в ЭМК (FHIR R4 DiagnosticReport)">
+                                        <i class="fas fa-file-export" aria-hidden="true"></i>
+                                        <span>Экспорт FHIR</span>
+                                    </button>
+                                    <a class="btn btn-outline" id="backToPatientBtn" href="patients.html">
+                                        <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                                        <span>К карточке пациента</span>
+                                    </a>
+                                </div>
+                            </article>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- The on-screen print template lived here. Removed in Sprint 3 — the
+         PDF is generated server-side by app.py build_ecg_pdf_report so this
+         block was unused and contained a stale hardcoded doctor name. -->
+
+
+    <script src="ecg-script.js?v=sample-loader-2"></script>
+    <script src="llm-panel.js"></script>
+    <script src="disease-panel.js"></script>
+    <script src="signal-viz.js"></script>
+    <script src="i18n.js?v=lang-switch-3"></script>
+    <script src="toast.js"></script>
+    <script src="nav-mobile.js"></script>
+    <script src="reveal.js" defer></script>
+</body>
+
+</html>
