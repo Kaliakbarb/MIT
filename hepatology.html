@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <script>(function(){try{var t=localStorage.getItem("bolTheme")||"dark";document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","dark");}})();</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SYNERA - Гепатология</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="app.css">
+    <link rel="stylesheet" href="hepatology.css">
+    <link rel="icon" href="/favicon.ico">
+    <script src="theme.js" defer></script>
+    <script src="app-shell.js" defer></script>
+    <script src="synera-patient-store.js" defer></script>
+    <script src="hepatology.js" defer></script>
+    <script src="reveal.js" defer></script>
+</head>
+
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a class="logo" href="/app">
+                    <img src="logo.png" alt="SYNERA logo" class="brand-logo-image">
+                    <span>SYNERA</span>
+                </a>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-item"><a href="/app"><i class="fas fa-grip"></i><span>Обзор</span></a></li>
+                    <li class="nav-item"><a href="patients.html"><i class="fas fa-users"></i><span>Пациенты</span></a></li>
+                    <li class="nav-item"><a href="ecg-analysis.html"><i class="fas fa-heart-pulse"></i><span>ЭКГ-анализ</span></a></li>
+                    <li class="nav-item active"><a href="hepatology.html"><i class="fas fa-vial-virus"></i><span>Гепатология</span></a></li>
+                    <li class="nav-item"><a href="reports.html"><i class="fas fa-chart-line"></i><span>Отчёты</span></a></li>
+                    <li class="nav-item"><a href="methodology.html"><i class="fas fa-flask"></i><span>Методология</span></a></li>
+                    <li class="nav-item"><a href="settings.html"><i class="fas fa-gear"></i><span>Настройки</span></a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-foot">
+                <a href="/" title="На сайт"><i class="fas fa-arrow-up-right-from-square"></i><span>Сайт SYNERA</span></a>
+                <a data-cmdk href="#"><i class="fas fa-magnifying-glass"></i><span>Поиск&nbsp;&nbsp;<kbd style="font-size:11px;color:var(--text-4);border:1px solid var(--border);border-radius:5px;padding:1px 6px;margin-left:auto">⌘K</kbd></span></a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="top-bar-left">
+                    <a class="logo-mobile" href="/app"><img src="logo.png" alt="SYNERA" class="brand-logo-image"><span>SYNERA</span></a>
+                    <span class="crumb"><b>Гепатология</b><i class="fas fa-chevron-right" style="font-size:10px;color:var(--text-4)" aria-hidden="true"></i> Фиброз и ХВГ</span>
+                </div>
+                <div class="top-bar-right">
+                    <button type="button" class="icon-btn" data-cmdk aria-label="Поиск (⌘K)"><i class="fas fa-magnifying-glass" aria-hidden="true"></i></button>
+                    <div class="user-profile">
+                        <div class="user-avatar"><i class="fas fa-user-md" aria-hidden="true"></i></div>
+                        <div class="user-info">
+                            <span class="user-name">Др. Айдар Т.</span>
+                            <span class="user-role">Врач-диагност</span>
+                        </div>
+                        <button type="button" class="logout-btn" aria-label="Выйти"><i class="fas fa-arrow-right-from-bracket" aria-hidden="true"></i></button>
+                    </div>
+                </div>
+            </header>
+
+            <div class="hep-page">
+                <section class="hep-head reveal">
+                    <div>
+                        <span class="eyebrow">Liver care pathway</span>
+                        <h1>Раннее выявление <span class="grad">патологий печени</span></h1>
+                        <p>Введите стандартные биохимические показатели крови — SYNERA оценит FIB-4, APRI, стадию фиброза и риск ХВГ-направления на серологию.</p>
+                    </div>
+                    <div class="hep-status" id="hepStatus">
+                        <span class="hep-status-dot"></span>
+                        <span>Модуль готов</span>
+                    </div>
+                </section>
+
+                <section class="patient-context panel reveal">
+                    <div>
+                        <span class="eyebrow">Пациент</span>
+                        <strong id="hepPatientName">—</strong>
+                        <p id="hepPatientMeta">—</p>
+                    </div>
+                    <select id="hepPatientSelect" aria-label="Выбрать пациента"></select>
+                    <a class="btn btn-outline" id="hepConsiliumLink" href="consilium.html">
+                        <i class="fas fa-stethoscope"></i> Консилиум
+                    </a>
+                </section>
+
+                <section class="hep-workspace">
+                    <form class="panel hep-form reveal" id="hepForm">
+                        <div class="panel-head">
+                            <div>
+                                <span class="eyebrow">Шаг 01</span>
+                                <h2>Лабораторные данные</h2>
+                            </div>
+                            <button type="button" class="btn-outline" id="demoBtn"><i class="fas fa-wand-magic-sparkles"></i> Demo</button>
+                        </div>
+
+                        <div class="hep-form-grid">
+                            <label><span>Возраст</span><input name="age" type="number" min="0" step="1" value="62"></label>
+                            <label><span>Пол</span><select name="sex"><option value="m">Мужской</option><option value="f">Женский</option></select></label>
+                            <label><span>ALT</span><input name="ALT" type="number" step="0.1" value="95"></label>
+                            <label><span>AST</span><input name="AST" type="number" step="0.1" value="140"></label>
+                            <label><span>ALP</span><input name="ALP" type="number" step="0.1" value="180"></label>
+                            <label><span>BIL</span><input name="BIL" type="number" step="0.1" value="35"></label>
+                            <label><span>ALB</span><input name="ALB" type="number" step="0.1" value="30"></label>
+                            <label><span>GGT</span><input name="GGT" type="number" step="0.1" value="180"></label>
+                            <label><span>PROT</span><input name="PROT" type="number" step="0.1" value="70"></label>
+                            <label><span>PLT</span><input name="PLT" type="number" step="0.1" value="110"></label>
+                            <label><span>CHE</span><input name="CHE" type="number" step="0.1" value="4.0"></label>
+                            <label><span>CHOL</span><input name="CHOL" type="number" step="0.1" value="3.0"></label>
+                            <label><span>CREA</span><input name="CREA" type="number" step="0.1" value="95"></label>
+                        </div>
+
+                        <div class="hep-history">
+                            <div class="hep-history-head">
+                                <span class="eyebrow">Trend-проверка</span>
+                                <strong>Предыдущий контроль</strong>
+                            </div>
+                            <div class="hep-history-grid">
+                                <label><span>ALT prev</span><input name="prev_ALT" type="number" step="0.1" placeholder="опц."></label>
+                                <label><span>GGT prev</span><input name="prev_GGT" type="number" step="0.1" placeholder="опц."></label>
+                                <label><span>PLT prev</span><input name="prev_PLT" type="number" step="0.1" placeholder="опц."></label>
+                                <label><span>ALB prev</span><input name="prev_ALB" type="number" step="0.1" placeholder="опц."></label>
+                            </div>
+                        </div>
+
+                        <div class="hep-actions">
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-microscope"></i> Анализировать</button>
+                            <p>Результат является clinical decision support и требует подтверждения врача.</p>
+                        </div>
+                    </form>
+
+                    <section class="panel hep-result reveal" id="resultPanel">
+                        <div class="panel-head">
+                            <div>
+                                <span class="eyebrow">Шаг 02</span>
+                                <h2>Риск и маршрутизация</h2>
+                            </div>
+                            <i class="fas fa-file-medical panel-head-ico" aria-hidden="true"></i>
+                        </div>
+
+                        <div class="hep-placeholder" id="placeholder">
+                            <i class="fas fa-vial-circle-check"></i>
+                            <h3>Готово к анализу</h3>
+                            <p>После запуска здесь появятся score, ML-стадия и следующий клинический шаг.</p>
+                        </div>
+
+                        <div class="hep-output" id="output" hidden>
+                            <div class="hep-triage" id="triageBox">
+                                <span id="triageLabel">—</span>
+                                <strong id="stageLabel">—</strong>
+                                <p id="protocolText">—</p>
+                            </div>
+
+                            <div class="hep-metrics">
+                                <article><span>FIB-4</span><strong id="fib4Value">—</strong><small id="fib4Band">—</small></article>
+                                <article><span>APRI</span><strong id="apriValue">—</strong><small>significant ≥ 1.5</small></article>
+                                <article><span>De Ritis</span><strong id="deritisValue">—</strong><small>AST / ALT</small></article>
+                                <article><span>ХВГ risk</span><strong id="hvgValue">—</strong><small id="hvgBand">—</small></article>
+                            </div>
+
+                            <div class="hvg-card" id="hvgCard">
+                                <div class="hvg-card-icon"><i class="fas fa-vial-virus" aria-hidden="true"></i></div>
+                                <div class="hvg-card-body">
+                                    <span>ХВГ screening</span>
+                                    <strong id="hvgDecision">—</strong>
+                                    <p id="hvgExplanation">Флаг хронического вирусного гепатита означает направление на серологию, а не диагноз.</p>
+                                </div>
+                                <div class="hvg-card-score" id="hvgScore">—</div>
+                            </div>
+
+                            <div class="next-action-card" id="nextActionCard">
+                                <div class="next-action-head">
+                                    <span>Next best action</span>
+                                    <strong id="nextPriority">—</strong>
+                                </div>
+                                <ul id="nextSteps"></ul>
+                                <p id="trendSignals">—</p>
+                            </div>
+
+                            <div class="consilium-card" id="consiliumCard">
+                                <div class="consilium-head">
+                                    <span>AI-консилиум</span>
+                                    <strong id="consensusLabel">—</strong>
+                                </div>
+                                <div class="consilium-grid" id="consiliumExperts"></div>
+                            </div>
+
+                            <div class="hep-lists">
+                                <div>
+                                    <h3>Факторы модели</h3>
+                                    <ul id="factorList"></ul>
+                                </div>
+                                <div>
+                                    <h3>Обоснование</h3>
+                                    <ul id="reasonList"></ul>
+                                </div>
+                            </div>
+
+                            <div class="hep-evidence" id="evidenceBox">
+                                <h3>Evidence</h3>
+                                <div class="hep-evidence-grid">
+                                    <article>
+                                        <span>Fibrosis model</span>
+                                        <strong id="fibEvidence">—</strong>
+                                        <small id="fibLimit">—</small>
+                                    </article>
+                                    <article>
+                                        <span>ХВГ screener</span>
+                                        <strong id="hvgEvidence">—</strong>
+                                        <small id="hvgLimit">—</small>
+                                    </article>
+                                </div>
+                            </div>
+
+                            <p class="hep-disclaimer" id="disclaimer"></p>
+                        </div>
+                    </section>
+                </section>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>
