@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- bol-theme-boot -->
+    <script>(function(){try{var t=localStorage.getItem("bolTheme")||"dark";document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","dark");}})();</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SYNERA - Пациенты</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="app.css">
+    <link rel="stylesheet" href="patients.css">
+    <link rel="icon" href="/favicon.ico">
+    <script src="theme.js" defer></script>
+    <script src="app-shell.js" defer></script>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a class="logo" href="/app">
+                    <img src="logo.png" alt="SYNERA logo" class="brand-logo-image">
+                    <span>SYNERA</span>
+                </a>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-item"><a href="/app"><i class="fas fa-grip"></i><span>Обзор</span></a></li>
+                    <li class="nav-item active"><a href="patients.html"><i class="fas fa-users"></i><span>Пациенты</span></a></li>
+                    <li class="nav-item"><a href="ecg-analysis.html"><i class="fas fa-heart-pulse"></i><span>ЭКГ-анализ</span></a></li>
+                    <li class="nav-item"><a href="reports.html"><i class="fas fa-chart-line"></i><span>Отчёты</span></a></li>
+                    <li class="nav-item"><a href="methodology.html"><i class="fas fa-flask"></i><span>Методология</span></a></li>
+                    <li class="nav-item"><a href="settings.html"><i class="fas fa-gear"></i><span>Настройки</span></a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-foot">
+                <a href="/" title="На сайт"><i class="fas fa-arrow-up-right-from-square"></i><span>Сайт SYNERA</span></a>
+                <a data-cmdk href="#"><i class="fas fa-magnifying-glass"></i><span>Поиск&nbsp;&nbsp;<kbd style="font-size:11px;color:var(--text-4);border:1px solid var(--border);border-radius:5px;padding:1px 6px;margin-left:auto">⌘K</kbd></span></a>
+            </div>
+        </aside>
+
+        <!-- Main -->
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="top-bar-left">
+                    <a class="logo-mobile" href="/app"><img src="logo.png" alt="SYNERA" class="brand-logo-image"><span>SYNERA</span></a>
+                    <span class="crumb"><b>Пациенты</b><i class="fas fa-chevron-right" style="font-size:10px;color:var(--text-4)" aria-hidden="true"></i> Кардиологическое наблюдение</span>
+                </div>
+                <div class="top-bar-right">
+                    <button class="icon-btn" data-cmdk aria-label="Поиск (⌘K)"><i class="fas fa-magnifying-glass" aria-hidden="true"></i></button>
+                    <div class="user-profile">
+                        <div class="user-avatar"><i class="fas fa-user-md" aria-hidden="true"></i></div>
+                        <div class="user-info">
+                            <span class="user-name">Др. Айдар Т.</span>
+                            <span class="user-role">Врач-диагност</span>
+                        </div>
+                        <button class="logout-btn" aria-label="Выйти"><i class="fas fa-arrow-right-from-bracket" aria-hidden="true"></i></button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Контент страницы пациентов -->
+            <div class="patients-page">
+                <!-- Заголовок и поиск -->
+                <section class="page-header reveal">
+                    <div>
+                        <span class="eyebrow">Регистр</span>
+                        <h1 class="page-title">Пациенты <span class="grad">под наблюдением</span></h1>
+                    </div>
+                    <div class="page-header-tools">
+                        <div class="search-container">
+                            <i class="fas fa-search" aria-hidden="true"></i>
+                            <input type="text" placeholder="Поиск по имени или ID" class="search-input" aria-label="Поиск по имени или ID">
+                        </div>
+                        <button class="btn btn-primary add-patient-btn">
+                            <i class="fas fa-plus" aria-hidden="true"></i>
+                            <span>Добавить пациента</span>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Таблица пациентов -->
+                <div class="patients-table-container panel reveal">
+                    <div class="clinical-table-wrap">
+                        <table class="patients-table clinical-table">
+                            <thead>
+                                <tr>
+                                    <th>Пациент</th>
+                                    <th>Возраст</th>
+                                    <th>Дата последнего анализа</th>
+                                    <th>Диагноз (ИИ)</th>
+                                    <th>Уровень риска</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="patient-row" data-patient-id="1">
+                                    <td>
+                                        <div class="patient-info">
+                                            <div class="patient-avatar">А</div>
+                                            <div class="patient-details">
+                                                <span class="patient-name">Айжан К.</span>
+                                                <span class="patient-id">ID: 001</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>34</td>
+                                    <td>15.12.2024</td>
+                                    <td>
+                                        <div class="latest-diagnosis-cell">
+                                            <strong>Ишемическая болезнь сердца</strong>
+                                            <span>Демо-данные</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="risk-level high">Высокий</span>
+                                    </td>
+                                    <td>
+                                        <button class="action-btn view-btn" aria-label="Открыть пациента">
+                                            <i class="fas fa-eye" aria-hidden="true"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="patient-row" data-patient-id="2">
+                                    <td>
+                                        <div class="patient-info">
+                                            <div class="patient-avatar">М</div>
+                                            <div class="patient-details">
+                                                <span class="patient-name">Марат С.</span>
+                                                <span class="patient-id">ID: 002</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>45</td>
+                                    <td>14.12.2024</td>
+                                    <td>
+                                        <div class="latest-diagnosis-cell">
+                                            <strong>Артериальная гипертензия</strong>
+                                            <span>Демо-данные</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="risk-level medium">Средний</span>
+                                    </td>
+                                    <td>
+                                        <button class="action-btn view-btn" aria-label="Открыть пациента">
+                                            <i class="fas fa-eye" aria-hidden="true"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="patient-row" data-patient-id="3">
+                                    <td>
+                                        <div class="patient-info">
+                                            <div class="patient-avatar">Ж</div>
+                                            <div class="patient-details">
+                                                <span class="patient-name">Жанар А.</span>
+                                                <span class="patient-id">ID: 003</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>28</td>
+                                    <td>13.12.2024</td>
+                                    <td>
+                                        <div class="latest-diagnosis-cell">
+                                            <strong>Аритмия</strong>
+                                            <span>Демо-данные</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="risk-level low">Низкий</span>
+                                    </td>
+                                    <td>
+                                        <button class="action-btn view-btn" aria-label="Открыть пациента">
+                                            <i class="fas fa-eye" aria-hidden="true"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="patient-row" data-patient-id="4">
+                                    <td>
+                                        <div class="patient-info">
+                                            <div class="patient-avatar">Д</div>
+                                            <div class="patient-details">
+                                                <span class="patient-name">Данияр Б.</span>
+                                                <span class="patient-id">ID: 004</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>52</td>
+                                    <td>12.12.2024</td>
+                                    <td>
+                                        <div class="latest-diagnosis-cell">
+                                            <strong>Клапанный порок</strong>
+                                            <span>Демо-данные</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="risk-level high">Высокий</span>
+                                    </td>
+                                    <td>
+                                        <button class="action-btn view-btn" aria-label="Открыть пациента">
+                                            <i class="fas fa-eye" aria-hidden="true"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="patient-row" data-patient-id="5">
+                                    <td>
+                                        <div class="patient-info">
+                                            <div class="patient-avatar">С</div>
+                                            <div class="patient-details">
+                                                <span class="patient-name">Салтанат Р.</span>
+                                                <span class="patient-id">ID: 005</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>38</td>
+                                    <td>11.12.2024</td>
+                                    <td>
+                                        <div class="latest-diagnosis-cell">
+                                            <strong>Миокардит</strong>
+                                            <span>Демо-данные</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="risk-level medium">Средний</span>
+                                    </td>
+                                    <td>
+                                        <button class="action-btn view-btn" aria-label="Открыть пациента">
+                                            <i class="fas fa-eye" aria-hidden="true"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="patient-row" data-patient-id="6">
+                                    <td>
+                                        <div class="patient-info">
+                                            <div class="patient-avatar">А</div>
+                                            <div class="patient-details">
+                                                <span class="patient-name">Асылбек Н.</span>
+                                                <span class="patient-id">ID: 006</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>41</td>
+                                    <td>10.12.2024</td>
+                                    <td>
+                                        <div class="latest-diagnosis-cell">
+                                            <strong>Гипертрофия левого желудочка</strong>
+                                            <span>Демо-данные</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="risk-level high">Высокий</span>
+                                    </td>
+                                    <td>
+                                        <button class="action-btn view-btn" aria-label="Открыть пациента">
+                                            <i class="fas fa-eye" aria-hidden="true"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="patient-row" data-patient-id="7">
+                                    <td>
+                                        <div class="patient-info">
+                                            <div class="patient-avatar">К</div>
+                                            <div class="patient-details">
+                                                <span class="patient-name">Камила Т.</span>
+                                                <span class="patient-id">ID: 007</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>29</td>
+                                    <td>09.12.2024</td>
+                                    <td>
+                                        <div class="latest-diagnosis-cell">
+                                            <strong>Сердечная недостаточность</strong>
+                                            <span>Демо-данные</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="risk-level high">Высокий</span>
+                                    </td>
+                                    <td>
+                                        <button class="action-btn view-btn" aria-label="Открыть пациента">
+                                            <i class="fas fa-eye" aria-hidden="true"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="patient-row" data-patient-id="8">
+                                    <td>
+                                        <div class="patient-info">
+                                            <div class="patient-avatar">Е</div>
+                                            <div class="patient-details">
+                                                <span class="patient-name">Ерлан У.</span>
+                                                <span class="patient-id">ID: 008</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>35</td>
+                                    <td>08.12.2024</td>
+                                    <td>
+                                        <div class="latest-diagnosis-cell">
+                                            <strong>Тахикардия</strong>
+                                            <span>Демо-данные</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="risk-level low">Низкий</span>
+                                    </td>
+                                    <td>
+                                        <button class="action-btn view-btn" aria-label="Открыть пациента">
+                                            <i class="fas fa-eye" aria-hidden="true"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Кнопка добавления пациента (нижняя) -->
+                <div class="add-patient-section reveal">
+                    <button class="add-patient-btn btn btn-outline">
+                        <i class="fas fa-plus" aria-hidden="true"></i>
+                        <span>Добавить пациента</span>
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Боковая панель пациента -->
+        <div class="patient-sidebar" id="patientSidebar">
+            <div class="patient-sidebar-head">
+                <span class="eyebrow">Карта пациента</span>
+                <button class="close-sidebar-btn icon-btn" aria-label="Закрыть">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                </button>
+            </div>
+
+            <div class="patient-card">
+                <div class="patient-info-card">
+                    <div class="patient-photo">
+                        <div class="photo-placeholder">
+                            <i class="fas fa-user" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                    <div class="patient-info-card-meta">
+                        <h2 class="patient-name-card">Айжан К.</h2>
+                        <p class="patient-id-card">ID: 001</p>
+                        <p class="patient-age-card">34 года</p>
+                    </div>
+                </div>
+
+                <div class="vital-stats">
+                    <div class="vital-item" data-vital="last-ecg">
+                        <i class="fas fa-heartbeat" aria-hidden="true"></i>
+                        <span class="vital-label">Пульс</span>
+                        <span class="vital-value">85 уд/мин</span>
+                    </div>
+                    <div class="vital-item">
+                        <i class="fas fa-tint" aria-hidden="true"></i>
+                        <span class="vital-label">Давление</span>
+                        <span class="vital-value">140/90</span>
+                    </div>
+                    <div class="vital-item">
+                        <i class="fas fa-calendar" aria-hidden="true"></i>
+                        <span class="vital-label">Последнее ЭКГ</span>
+                        <span class="vital-value">15.12.2024</span>
+                    </div>
+                </div>
+
+                <div class="diagnosis-info">
+                    <h3>Диагноз ИИ</h3>
+                    <p class="diagnosis-text">Ишемическая болезнь сердца</p>
+                    <p class="analysis-date">Анализ: 15.12.2024</p>
+                </div>
+
+                <!-- Факторы риска (редактор) -->
+                <details class="risk-factors-card" id="riskFactorsCard">
+                    <summary>
+                        <span class="risk-factors-kicker">RISK</span>
+                        <strong>Факторы риска</strong>
+                        <small>Возраст, пол, липиды, давление, сопутствующие состояния</small>
+                    </summary>
+                    <form class="risk-factors-grid" id="riskFactorsForm" autocomplete="off">
+                        <label>
+                            Возраст
+                            <input type="number" name="age" min="0" max="120" inputmode="numeric">
+                        </label>
+                        <label>
+                            Пол
+                            <select name="sex">
+                                <option value="">—</option>
+                                <option value="male">Мужской / Male</option>
+                                <option value="female">Женский / Female</option>
+                            </select>
+                        </label>
+                        <label>
+                            Холестерин, мг/дл
+                            <input type="number" name="chol" min="0" step="1" inputmode="numeric">
+                        </label>
+                        <label>
+                            HDL, мг/дл
+                            <input type="number" name="hdl" min="0" step="1" inputmode="numeric">
+                        </label>
+                        <label>
+                            САД, мм рт. ст.
+                            <input type="number" name="sbp" min="0" step="1" inputmode="numeric">
+                        </label>
+                        <label class="risk-factor-checkbox">
+                            <input type="checkbox" name="bpmeds">
+                            Приём антигипертензивных
+                        </label>
+                        <label class="risk-factor-checkbox">
+                            <input type="checkbox" name="smoker">
+                            Курильщик
+                        </label>
+                        <label class="risk-factor-checkbox">
+                            <input type="checkbox" name="diabetic">
+                            Сахарный диабет
+                        </label>
+                    </form>
+                    <p class="risk-factors-hint">Изменения сохраняются автоматически и используются при расчёте 10-летнего риска.</p>
+                </details>
+
+                <button class="analyze-btn btn btn-primary">
+                    <i class="fas fa-microscope" aria-hidden="true"></i>
+                    <span>Анализировать заново</span>
+                </button>
+
+                <div class="charts-section">
+                    <h3>Динамика изменений</h3>
+                    <div class="chart-container">
+                        <canvas id="ecgChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="riskChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Результаты анализа (скрыты по умолчанию) -->
+                <div class="analysis-results" id="analysisResults" style="display: none;">
+                    <div class="results-header">
+                        <h3>Результаты повторного анализа</h3>
+                        <button class="close-results-btn icon-btn" aria-label="Закрыть">
+                            <i class="fas fa-times" aria-hidden="true"></i>
+                        </button>
+                    </div>
+
+                    <div class="main-risk-result">
+                        <h4>Риск сердечной недостаточности</h4>
+                        <div class="risk-percentage-large">78%</div>
+                        <div class="risk-level-large high">Высокий</div>
+                        <div class="risk-scale">
+                            <div class="scale-gradient"></div>
+                            <div class="scale-marker" style="left: 78%"></div>
+                        </div>
+                    </div>
+
+                    <div class="pathologies-section">
+                        <h4>Выявленные патологии</h4>
+                        <div class="pathologies-grid">
+                            <div class="pathology-card">
+                                <div class="pathology-name">Аритмия</div>
+                                <div class="pathology-probability">85%</div>
+                            </div>
+                            <div class="pathology-card">
+                                <div class="pathology-name">Ишемия миокарда</div>
+                                <div class="pathology-probability">72%</div>
+                            </div>
+                            <div class="pathology-card">
+                                <div class="pathology-name">Гипертрофия левого желудочка</div>
+                                <div class="pathology-probability">60%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="comparison-section">
+                        <h4>Сравнение с предыдущим анализом</h4>
+                        <div class="comparison-content">
+                            <div class="comparison-text">
+                                <span class="comparison-change positive">Риск снизился на 12%</span>
+                                <span class="comparison-date">по сравнению с 02.09.2024</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="results-actions">
+                        <button class="action-btn pdf-btn">
+                            <i class="fas fa-file-pdf" aria-hidden="true"></i>
+                            <span>PDF</span>
+                        </button>
+                        <button class="action-btn send-btn">
+                            <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                            <span>Отправить</span>
+                        </button>
+                    </div>
+                </div>
+
+                <section class="patient-diseases" id="patientDiseases" hidden>
+                    <header class="patient-diseases-header">
+                        <h4>Найденные заболевания</h4>
+                        <span id="patientDiseasesCount">—</span>
+                    </header>
+                    <ul class="patient-diseases-list" id="patientDiseasesList"></ul>
+                </section>
+
+                <section class="patient-organs" id="patientOrgans">
+                    <header class="patient-diseases-header">
+                        <h4>Органы и консилиум</h4>
+                        <a id="patientConsiliumLink" href="consilium.html">Открыть консилиум</a>
+                    </header>
+                    <div class="patient-organs-grid" id="patientOrgansGrid"></div>
+                </section>
+
+                <div class="analysis-timeline">
+                    <h3>История анализов</h3>
+                    <div class="timeline-container">
+                        <div class="timeline-item">
+                            <div class="timeline-date">15.12.2024</div>
+                            <div class="timeline-content">
+                                <div class="timeline-risk">72%</div>
+                                <div class="timeline-diagnosis">ИБС</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-date">08.12.2024</div>
+                            <div class="timeline-content">
+                                <div class="timeline-risk">68%</div>
+                                <div class="timeline-diagnosis">Аритмия</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-date">01.12.2024</div>
+                            <div class="timeline-content">
+                                <div class="timeline-risk">65%</div>
+                                <div class="timeline-diagnosis">Гипертензия</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Оверлей загрузки -->
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="loading-content">
+                <div class="ecg-animation">
+                    <canvas id="ecgAnimation"></canvas>
+                </div>
+                <h2 class="loading-text">Идёт повторный анализ данных ЭКГ...</h2>
+                <div class="loading-progress">
+                    <div class="progress-bar"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Экран результатов анализа -->
+        <div class="results-overlay" id="resultsOverlay">
+            <div class="results-content">
+                <div class="results-header">
+                    <h2>Результаты анализа</h2>
+                    <button class="close-results-btn icon-btn" aria-label="Закрыть">
+                        <i class="fas fa-times" aria-hidden="true"></i>
+                    </button>
+                </div>
+
+                <div class="main-risk-result">
+                    <h3>Риск сердечной недостаточности</h3>
+                    <div class="risk-percentage-large">78%</div>
+                    <div class="risk-level-large high">Высокий</div>
+                    <div class="risk-scale">
+                        <div class="scale-gradient"></div>
+                        <div class="scale-marker" style="left: 78%"></div>
+                    </div>
+                </div>
+
+                <div class="pathologies-section">
+                    <h3>Выявленные патологии</h3>
+                    <div class="pathologies-grid">
+                        <div class="pathology-card">
+                            <div class="pathology-name">Аритмия</div>
+                            <div class="pathology-probability">85%</div>
+                        </div>
+                        <div class="pathology-card">
+                            <div class="pathology-name">Ишемия миокарда</div>
+                            <div class="pathology-probability">72%</div>
+                        </div>
+                        <div class="pathology-card">
+                            <div class="pathology-name">Гипертрофия левого желудочка</div>
+                            <div class="pathology-probability">60%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comparison-section">
+                    <h3>Сравнение с предыдущим анализом</h3>
+                    <div class="comparison-content">
+                        <div class="comparison-text">
+                            <span class="comparison-change positive">Риск снизился на 12%</span>
+                            <span class="comparison-date">по сравнению с 02.09.2024</span>
+                        </div>
+                        <div class="comparison-chart">
+                            <canvas id="comparisonChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="results-actions">
+                    <button class="action-btn pdf-btn">
+                        <i class="fas fa-file-pdf" aria-hidden="true"></i>
+                        <span>Создать отчёт PDF</span>
+                    </button>
+                    <button class="action-btn send-btn">
+                        <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                        <span>Отправить пациенту</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Overlay для боковой панели -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    </div>
+
+    <!-- Модалка добавления пациента -->
+    <div class="modal-backdrop" id="addPatientBackdrop"></div>
+    <div class="modal" id="addPatientModal" role="dialog" aria-modal="true" aria-labelledby="addPatientTitle">
+        <div class="modal-header">
+            <h3 id="addPatientTitle"><i class="fas fa-user-plus" aria-hidden="true"></i> Добавить пациента</h3>
+            <button class="close-modal" data-close-add-patient aria-label="Закрыть"><i class="fas fa-times" aria-hidden="true"></i></button>
+        </div>
+        <div class="modal-body">
+            <form id="addPatientForm" class="patient-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="apName">ФИО пациента</label>
+                        <input type="text" id="apName" placeholder="Иванов Иван Иванович" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="apBirth">Дата рождения</label>
+                        <input type="date" id="apBirth">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="apId">ID карты</label>
+                        <input type="text" id="apId" placeholder="напр. 009 (необязательно)">
+                    </div>
+                    <div class="form-group">
+                        <label for="apSex">Пол</label>
+                        <select id="apSex">
+                            <option value="М">Мужской</option>
+                            <option value="Ж">Женский</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="apComplaints">Жалобы / симптомы</label>
+                    <input type="text" id="apComplaints" placeholder="Боль в груди, одышка… (необязательно)">
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary" data-close-add-patient type="button">Отмена</button>
+            <button class="btn btn-primary" type="submit" form="addPatientForm">Сохранить карту</button>
+        </div>
+    </div>
+
+    <script src="patients-script.js?v=patient-sync-1"></script>
+    <script src="i18n.js?v=lang-switch-3"></script>
+    <script src="toast.js"></script>
+    <script src="nav-mobile.js"></script>
+    <script src="reveal.js" defer></script>
+</body>
+
+</html>
