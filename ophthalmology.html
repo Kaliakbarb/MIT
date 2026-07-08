@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <script>(function(){try{var t=localStorage.getItem("bolTheme")||"dark";document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","dark");}})();</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SYNERA - Офтальмология</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="app.css">
+    <link rel="stylesheet" href="ophthalmology.css">
+    <link rel="icon" href="/favicon.ico">
+    <script src="theme.js" defer></script>
+    <script src="app-shell.js" defer></script>
+    <script src="synera-patient-store.js" defer></script>
+    <script src="ophthalmology.js" defer></script>
+    <script src="reveal.js" defer></script>
+</head>
+
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a class="logo" href="/app">
+                    <img src="logo.png" alt="SYNERA logo" class="brand-logo-image">
+                    <span>SYNERA</span>
+                </a>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-item"><a href="/app"><i class="fas fa-grip"></i><span>Обзор</span></a></li>
+                    <li class="nav-item"><a href="patients.html"><i class="fas fa-users"></i><span>Пациенты</span></a></li>
+                    <li class="nav-item"><a href="ecg-analysis.html"><i class="fas fa-heart-pulse"></i><span>ЭКГ-анализ</span></a></li>
+                    <li class="nav-item"><a href="hepatology.html"><i class="fas fa-vial-virus"></i><span>Гепатология</span></a></li>
+                    <li class="nav-item active"><a href="ophthalmology.html"><i class="fas fa-eye"></i><span>Офтальмология</span></a></li>
+                    <li class="nav-item"><a href="reports.html"><i class="fas fa-chart-line"></i><span>Отчёты</span></a></li>
+                    <li class="nav-item"><a href="methodology.html"><i class="fas fa-flask"></i><span>Методология</span></a></li>
+                    <li class="nav-item"><a href="settings.html"><i class="fas fa-gear"></i><span>Настройки</span></a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-foot">
+                <a href="/" title="На сайт"><i class="fas fa-arrow-up-right-from-square"></i><span>Сайт SYNERA</span></a>
+                <a data-cmdk href="#"><i class="fas fa-magnifying-glass"></i><span>Поиск&nbsp;&nbsp;<kbd style="font-size:11px;color:var(--text-4);border:1px solid var(--border);border-radius:5px;padding:1px 6px;margin-left:auto">⌘K</kbd></span></a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="top-bar-left">
+                    <a class="logo-mobile" href="/app"><img src="logo.png" alt="SYNERA" class="brand-logo-image"><span>SYNERA</span></a>
+                    <span class="crumb"><b>Офтальмология</b><i class="fas fa-chevron-right" style="font-size:10px;color:var(--text-4)" aria-hidden="true"></i> Fundus screening</span>
+                </div>
+                <div class="top-bar-right">
+                    <button type="button" class="icon-btn" data-cmdk aria-label="Поиск (⌘K)"><i class="fas fa-magnifying-glass" aria-hidden="true"></i></button>
+                    <div class="user-profile">
+                        <div class="user-avatar"><i class="fas fa-user-md" aria-hidden="true"></i></div>
+                        <div class="user-info">
+                            <span class="user-name">Др. Айдар Т.</span>
+                            <span class="user-role">Врач-диагност</span>
+                        </div>
+                        <button type="button" class="logout-btn" aria-label="Выйти"><i class="fas fa-arrow-right-from-bracket" aria-hidden="true"></i></button>
+                    </div>
+                </div>
+            </header>
+
+            <div class="eye-page">
+                <section class="eye-head reveal">
+                    <div>
+                        <span class="eyebrow">Retinal screening</span>
+                        <h1>Анализ <span class="muted">глазного дна</span></h1>
+                        <p>Загрузите fundus-снимок — SYNERA выполнит ONNX-классификацию и покажет EigenCAM-карту внимания.</p>
+                    </div>
+                    <div class="eye-status" id="eyeStatus">
+                        <span class="eye-status-dot"></span>
+                        <span>Проверяю модуль...</span>
+                    </div>
+                </section>
+
+                <section class="patient-context panel reveal">
+                    <div>
+                        <span class="eyebrow">Пациент</span>
+                        <strong id="eyePatientName">—</strong>
+                        <p id="eyePatientMeta">—</p>
+                    </div>
+                    <select id="eyePatientSelect" aria-label="Выбрать пациента"></select>
+                    <a class="btn btn-outline" id="eyeConsiliumLink" href="consilium.html">
+                        <i class="fas fa-stethoscope"></i> Консилиум
+                    </a>
+                </section>
+
+                <section class="eye-workspace">
+                    <section class="panel eye-upload reveal">
+                        <div class="panel-head">
+                            <div>
+                                <span class="eyebrow">Шаг 01</span>
+                                <h2>Снимок fundus</h2>
+                            </div>
+                            <i class="fas fa-cloud-arrow-up panel-head-ico" aria-hidden="true"></i>
+                        </div>
+                        <div class="eye-sample-loader" id="eyeSampleLoader">
+                            <label class="eye-field-label" for="eyeSampleSelect">Или попробовать пример:</label>
+                            <select id="eyeSampleSelect">
+                                <option value="">— выбрать demo fundus —</option>
+                            </select>
+                            <button type="button" class="btn btn-outline" id="eyeSampleLoadBtn" disabled>
+                                Загрузить и проанализировать
+                            </button>
+                        </div>
+                        <div class="eye-drop" id="eyeDrop" role="button" tabindex="0">
+                            <input type="file" id="eyeFile" accept="image/*">
+                            <div class="eye-drop-icon"><i class="fas fa-eye" aria-hidden="true"></i></div>
+                            <h3>Перетащите изображение или выберите файл</h3>
+                            <p>JPG, PNG, WebP. Результат является screening decision support.</p>
+                            <span id="eyeFileName">Файл не выбран</span>
+                        </div>
+                        <div class="eye-preview" id="eyePreview" hidden>
+                            <img id="previewImage" alt="Fundus preview">
+                        </div>
+                        <div class="eye-actions">
+                            <button type="button" class="btn btn-primary" id="analyzeEyeBtn" disabled><i class="fas fa-microscope"></i> Анализировать глаз</button>
+                            <label class="eye-toggle"><input type="checkbox" id="saliencyToggle" checked> EigenCAM</label>
+                        </div>
+                    </section>
+
+                    <section class="panel eye-result reveal" id="eyeResultPanel">
+                        <div class="panel-head">
+                            <div>
+                                <span class="eyebrow">Шаг 02</span>
+                                <h2>Результат</h2>
+                            </div>
+                            <i class="fas fa-file-medical panel-head-ico" aria-hidden="true"></i>
+                        </div>
+
+                        <div class="eye-placeholder" id="eyePlaceholder">
+                            <i class="fas fa-eye"></i>
+                            <h3>Готово к анализу</h3>
+                            <p>После загрузки появятся класс, вероятность, heatmap и organ report.</p>
+                        </div>
+
+                        <div class="eye-output" id="eyeOutput" hidden>
+                            <div class="eye-warning" id="eyeCalibrationWarning" hidden></div>
+
+                            <div class="eye-summary" id="eyeSummary">
+                                <span id="eyeBand">—</span>
+                                <strong id="eyePrediction">—</strong>
+                                <p id="eyeRecommendation">—</p>
+                            </div>
+
+                            <div class="eye-saliency" id="saliencyBox" hidden>
+                                <img id="saliencyImage" alt="EigenCAM saliency">
+                            </div>
+
+                            <div class="eye-probs" id="probList"></div>
+
+                            <div class="eye-report">
+                                <h3>Organ report</h3>
+                                <ul id="organFindings"></ul>
+                            </div>
+
+                            <p class="eye-disclaimer" id="eyeDisclaimer"></p>
+                        </div>
+                    </section>
+                </section>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>
