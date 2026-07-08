@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SYNERA — клинический AI для ЭКГ, печени и ХВГ</title>
+    <meta name="description" content="SYNERA помогает врачу ранжировать риск по ЭКГ и лабораторным показателям печени: кардиориск, фиброз, ХВГ-screening и следующий клинический шаг.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="landing.css">
+    <link rel="icon" href="/favicon.ico">
+</head>
+<body>
+    <div class="curtain" id="curtain" aria-hidden="true"></div>
+    <div class="bg-layer" aria-hidden="true">
+        <div class="bg-grid"></div>
+        <div class="bg-glow"></div>
+        <div class="bg-grain"></div>
+        <div class="bg-scan"></div>
+        <svg class="thread" id="thread" viewBox="0 0 24 1000" preserveAspectRatio="none" aria-hidden="true">
+            <path id="thread-path" pathLength="1" d=""></path>
+            <path id="thread-flat" pathLength="1" d=""></path>
+            <circle id="thread-glint" r="2.4" cx="12" cy="0"></circle>
+        </svg>
+    </div>
+
+    <!-- NAV -->
+    <header class="nav">
+        <div class="wrap nav-inner">
+            <a class="brand" href="/">
+                <span class="brand-mark">
+                    <img src="logo.png" alt="SYNERA" width="30" height="30">
+                    <span class="brand-pulse" aria-hidden="true"></span>
+                </span>
+                SYNERA
+            </a>
+            <nav class="nav-links">
+                <a href="#playground">Демо</a>
+                <a href="#leads">Разбор</a>
+                <a href="#validation">Валидация</a>
+                <a href="hepatology.html">Гепатология</a>
+                <a href="methodology.html">Методология</a>
+            </nav>
+            <div class="nav-hud" id="nav-hud" aria-hidden="true">
+                <span class="hud-item">conf <b id="hud-conf">—</b></span>
+                <span class="hud-item">risk <b id="hud-risk">—</b></span>
+                <span class="hud-item">σ <b id="hud-sigma">—</b></span>
+            </div>
+            <div class="nav-cta">
+                <a class="btn btn-ghost" href="login.html" data-magnetic>Войти</a>
+                <a class="btn btn-primary" href="/app" data-magnetic>Открыть приложение <i class="fas fa-arrow-right" style="font-size:11px" aria-hidden="true"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO + PLAYGROUND -->
+    <section class="hero" id="playground">
+        <div class="wrap">
+            <a class="pill reveal" id="live-pill" href="#validation">
+                <span class="dot"></span> <span class="pill-text">Нерегулярный ритм · ~78 уд/мин</span>
+                <span class="tag">PX-4829 · ФП <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+            </a>
+            <h1 class="reveal" data-d="1">
+                <span class="line"><span>Видит риск раньше.</span></span>
+                <span class="line"><span class="grad">От ЭКГ до печени и <span class="decode" data-text="ХВГ">ХВГ</span>.</span></span>
+            </h1>
+            <p class="sub reveal" data-d="2">Загрузите 12-отведённую ЭКГ или лабораторные показатели печени — SYNERA вернёт риск-стратификацию, объяснимые факторы и следующий клинический шаг.</p>
+            <div class="hero-cta reveal" data-d="3">
+                <a class="btn btn-primary btn-lg" href="/app" data-magnetic data-cursor="открыть">Открыть приложение <i class="fas fa-arrow-right" style="font-size:12px" aria-hidden="true"></i></a>
+                <a class="btn btn-outline btn-lg" href="#validation" data-magnetic><i class="fas fa-shield-halved" style="font-size:12px" aria-hidden="true"></i> Смотреть валидацию</a>
+            </div>
+
+            <!-- THE PLAYGROUND FRAME -->
+            <div class="frame-stage reveal" data-d="3">
+                <div class="frame" id="frame">
+                    <div class="frame-bar">
+                        <span class="frame-url"><i class="fas fa-circle" aria-hidden="true"></i> synera.app/прогноз-риска</span>
+                        <div class="screen-tabs" role="tablist" aria-label="Экраны SYNERA">
+                            <button class="screen-tab active" role="tab" id="tab-ecg" aria-selected="true" aria-controls="screen-ecg" data-screen="ecg" tabindex="0">ЭКГ-анализ</button>
+                            <button class="screen-tab" role="tab" id="tab-overview" aria-selected="false" aria-controls="screen-overview" data-screen="overview" tabindex="-1">Обзор</button>
+                            <button class="screen-tab" role="tab" id="tab-reports" aria-selected="false" aria-controls="screen-reports" data-screen="reports" tabindex="-1">Отчёты</button>
+                            <button class="screen-tab" role="tab" id="tab-validation" aria-selected="false" aria-controls="screen-validation" data-screen="validation" tabindex="-1">Валидация</button>
+                            <span class="tab-underline" id="tab-underline" aria-hidden="true"></span>
+                        </div>
+                    </div>
+                    <div class="frame-screens">
+
+                        <!-- SCREEN: ЭКГ-АНАЛИЗ (default) -->
+                        <div class="screen" id="screen-ecg" role="tabpanel" aria-labelledby="tab-ecg" data-screen="ecg">
+                            <div class="ecg-grid">
+                                <!-- control column -->
+                                <div class="ctl">
+                                    <div class="step-label"><span class="step-n">01</span> Загрузка ЭКГ</div>
+                                    <div class="patient-card">
+                                        <div class="pc-avatar"><i class="fas fa-user" aria-hidden="true"></i></div>
+                                        <div class="pc-id"><b>Айжан К.</b><span>PX-4829 · 34 года</span></div>
+                                        <span class="pc-tag" id="pc-tag">ФП</span>
+                                    </div>
+                                    <div class="dropzone" id="dropzone">
+                                        <i class="fas fa-heart-pulse dz-ico" aria-hidden="true"></i>
+                                        <h4>Перетащите ЭКГ сюда</h4>
+                                        <p>Фото, <code>.npy</code> или <code>.csv</code> · 12 отведений</p>
+                                        <div class="parsed" id="parsed-line">12 отведений · 1000 отсчётов · 10 с @ 100 Гц</div>
+                                        <div class="file-state" id="file-state"><i class="fas fa-circle" aria-hidden="true"></i> Файл не выбран</div>
+                                    </div>
+                                    <div class="samples">
+                                        <span class="samples-label">Или выберите пример:</span>
+                                        <div class="chips" role="radiogroup" aria-label="Пример ЭКГ">
+                                            <button class="chip" role="radio" aria-checked="false" data-case="norm" tabindex="-1">
+                                                <span class="chip-dot low"></span><b>Норма</b><span class="chip-sub">Жанар А. · низкий</span>
+                                            </button>
+                                            <button class="chip" role="radio" aria-checked="false" data-case="htn" tabindex="-1">
+                                                <span class="chip-dot med"></span><b>Гипертензия</b><span class="chip-sub">Марат С. · средний</span>
+                                            </button>
+                                            <button class="chip active" role="radio" aria-checked="true" data-case="afib" tabindex="0">
+                                                <span class="chip-dot high"></span><b>ФП / аритмия</b><span class="chip-sub">Айжан К. · высокий</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <button class="btn-run" id="btn-run" data-magnetic data-cursor="запустить"><i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i> Анализировать ЭКГ</button>
+                                    <button class="btn-reset" id="btn-reset" hidden><i class="fas fa-rotate-left" aria-hidden="true"></i> Сбросить</button>
+                                </div>
+
+                                <!-- reading column -->
+                                <div class="read" id="read" aria-live="polite">
+                                    <!-- live trace strip -->
+                                    <div class="trace-strip" data-cursor="скраб">
+                                        <div class="lab"><span>Сигнал · отведение II</span><b id="trace-bpm">~78 уд/мин</b></div>
+                                        <canvas id="cardiogram-canvas" aria-hidden="true"></canvas>
+                                        <div class="scrub-cursor" id="scrub-cursor" aria-hidden="true"></div>
+                                        <div class="scrub-labels" id="scrub-labels" aria-hidden="true">
+                                            <span class="sl" data-lm="p">P <b id="sl-pr">—</b></span>
+                                            <span class="sl" data-lm="qrs">QRS <b id="sl-qrs">—</b></span>
+                                            <span class="sl" data-lm="t">T <b id="sl-qt">—</b></span>
+                                        </div>
+                                        <input type="range" class="scrub-range" id="scrub-range" min="0" max="2" step="1" value="1" aria-label="Ориентиры ЭКГ: P, QRS, T">
+                                    </div>
+
+                                    <!-- empty state -->
+                                    <div class="empty-state" id="empty-state">
+                                        <i class="fas fa-stethoscope" aria-hidden="true"></i>
+                                        <p>Готово к анализу</p>
+                                        <span>Нажмите «Анализировать ЭКГ»</span>
+                                    </div>
+
+                                    <!-- loading -->
+                                    <div class="loading" id="loading" hidden>
+                                        <div class="orbit" aria-hidden="true"></div>
+                                        <div class="steps-dots">
+                                            <div class="sdot" data-i="0"><span class="sdot-mark"></span> Подготовка ЭКГ</div>
+                                            <div class="sdot" data-i="1"><span class="sdot-mark"></span> Классификация ритма</div>
+                                            <div class="sdot" data-i="2"><span class="sdot-mark"></span> Формирование заключения</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- result -->
+                                    <div class="result" id="result" hidden>
+                                        <div class="res-head">
+                                            <span class="eyebrow">Выделенный паттерн</span>
+                                            <h3 id="res-title">Признаки нарушения ритма</h3>
+                                            <div class="res-pills">
+                                                <span class="rpill" id="rpill-band">высокий риск</span>
+                                                <span class="rpill ghost" id="rpill-sigma">σ_top1 0.041 · 3-seed ансамбль</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="rings" id="rings">
+                                            <div class="ring-wrap">
+                                                <svg viewBox="0 0 120 120" class="ring" aria-hidden="true">
+                                                    <circle class="ring-bg" cx="60" cy="60" r="52"></circle>
+                                                    <circle class="ring-fg" id="ring-conf" cx="60" cy="60" r="52"></circle>
+                                                </svg>
+                                                <div class="ring-c"><b id="conf-num">0</b><span>уверенность</span></div>
+                                            </div>
+                                            <div class="ring-wrap">
+                                                <svg viewBox="0 0 120 120" class="ring" aria-hidden="true">
+                                                    <circle class="ring-bg" cx="60" cy="60" r="52"></circle>
+                                                    <circle class="ring-fg" id="ring-risk" cx="60" cy="60" r="52"></circle>
+                                                    <line class="ring-tick" x1="103" y1="60" x2="117" y2="60"></line>
+                                                </svg>
+                                                <div class="ring-c"><b id="risk-num">0</b><span>риск 10 лет</span></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="tiles" id="tiles">
+                                            <div class="tile" data-k="hr"><div class="tile-v">—</div><div class="tile-k">ЧСС, уд/мин</div></div>
+                                            <div class="tile" data-k="pr"><div class="tile-v">—</div><div class="tile-k">PR, мс</div></div>
+                                            <div class="tile" data-k="qrs"><div class="tile-v">—</div><div class="tile-k">QRS, мс</div></div>
+                                            <div class="tile" data-k="qt"><div class="tile-v">—</div><div class="tile-k">QT, мс</div></div>
+                                            <div class="tile" data-k="qtc"><div class="tile-v">—</div><div class="tile-k">QTc, мс</div></div>
+                                            <div class="tile" data-k="axis"><div class="tile-v">—</div><div class="tile-k">Эл. ось</div></div>
+                                            <div class="tile" data-k="rhythm"><div class="tile-v">—</div><div class="tile-k">Ритм</div></div>
+                                        </div>
+                                        <p class="tiles-caption" id="tiles-caption" hidden></p>
+
+                                        <!-- diagnoses + threshold -->
+                                        <div class="dx-head">
+                                            <span class="eyebrow">Диагнозы · 56 SCP-кодов</span>
+                                            <label class="thr">Порог решения <input type="range" id="thr-range" min="20" max="80" value="50" aria-label="Порог решения" aria-valuetext="50%"> <b id="thr-val">50%</b></label>
+                                        </div>
+                                        <div class="dx-list" id="dx-list"></div>
+
+                                        <!-- LLM panel -->
+                                        <div class="llm">
+                                            <div class="llm-head"><span class="eyebrow">Второе мнение · AI-ассистент</span><span class="llm-badge">готово</span></div>
+                                            <div class="llm-actions">
+                                                <button class="llm-act active" data-llm="note">Клиническая запись</button>
+                                                <button class="llm-act" data-llm="patient">Объяснить пациенту</button>
+                                                <button class="llm-act" data-llm="ddx">Диф. диагнозы</button>
+                                                <button class="llm-act ring-act" data-llm="panel">Виртуальный консилиум</button>
+                                            </div>
+                                            <div class="llm-output" id="llm-output"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SCREEN: ОБЗОР -->
+                        <div class="screen" id="screen-overview" role="tabpanel" aria-labelledby="tab-overview" data-screen="overview" hidden>
+                            <div class="dash">
+                                <div class="dash-head">
+                                    <div><span class="eyebrow">Сегодня</span><h3>Кардиологическое наблюдение</h3></div>
+                                    <span class="dash-when">5 июня</span>
+                                </div>
+                                <div class="kpis">
+                                    <div class="kpi"><b>3</b><span>Пациентов</span></div>
+                                    <div class="kpi"><b>3</b><span>ЭКГ обработано</span></div>
+                                    <div class="kpi"><b class="hot">2</b><span>Повышенный риск</span></div>
+                                    <div class="kpi"><b>3</b><span>На проверке</span></div>
+                                </div>
+                                <div class="recent">
+                                    <div class="recent-head">Последние ЭКГ-записи <span>кликните строку →</span></div>
+                                    <table class="rec-table">
+                                        <tbody>
+                                            <tr class="rec-row" data-case="afib" tabindex="0">
+                                                <td><span class="rdot high"></span> Айжан К.</td><td>PX-4829</td><td>Фибрилляция предсердий</td><td class="r-band high">высокий · 87%</td>
+                                            </tr>
+                                            <tr class="rec-row" data-case="htn" tabindex="0">
+                                                <td><span class="rdot med"></span> Марат С.</td><td>PX-3310</td><td>Гипертрофия ЛЖ</td><td class="r-band med">средний · 76%</td>
+                                            </tr>
+                                            <tr class="rec-row" data-case="norm" tabindex="0">
+                                                <td><span class="rdot low"></span> Жанар А.</td><td>PX-2027</td><td>Норма</td><td class="r-band low">низкий · 69%</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SCREEN: ОТЧЁТЫ -->
+                        <div class="screen" id="screen-reports" role="tabpanel" aria-labelledby="tab-reports" data-screen="reports" hidden>
+                            <div class="rep">
+                                <div class="dash-head"><div><span class="eyebrow">Отчёты</span><h3>Сводка модели</h3></div></div>
+                                <div class="rep-kpis">
+                                    <div class="kpi"><b>0.928</b><span>Macro AUROC · внешний госпиталь</span></div>
+                                    <div class="kpi"><b>88.9<small>%</small></b><span>Покрытие · цель 90%</span></div>
+                                    <div class="kpi"><b>0.041</b><span>ECE · калибровка</span></div>
+                                </div>
+                                <div class="rep-calib">
+                                    <div class="calib-gauge">
+                                        <svg viewBox="0 0 120 120" aria-hidden="true"><circle class="ring-bg" cx="60" cy="60" r="52"></circle><circle class="ring-fg cov" id="rep-cov-ring" cx="60" cy="60" r="52" style="stroke-dashoffset:36.3"></circle></svg>
+                                        <div class="ring-c"><b>88.9<small>%</small></b><span>покрытие</span></div>
+                                    </div>
+                                    <div class="calib-note">
+                                        <h4>Конформная калибровка</h4>
+                                        <p>Эмпирическое покрытие 90%-интервалов — <b>88.9%</b>. Мы пишем измеренное число, а не целевое.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SCREEN: ВАЛИДАЦИЯ -->
+                        <div class="screen" id="screen-validation" role="tabpanel" aria-labelledby="tab-validation" data-screen="validation" hidden>
+                            <div class="repv">
+                                <div class="dash-head"><div><span class="eyebrow">Валидация</span><h3>Обобщение на новых пациентах</h3></div></div>
+                                <div class="repv-cards">
+                                    <div class="vc"><b>0.928</b><span>Внешний госпиталь · AUROC</span><em>+10.3 пп · мульти-датасет</em></div>
+                                    <div class="vc"><b>74.5<small>%</small></b><span>Random split</span><em>reference — допускает утечку</em></div>
+                                    <div class="vc"><b>69.0<small>%</small></b><span>Patient-disjoint · fold 10</span><em>защищаемая, n=1617</em></div>
+                                </div>
+                                <ul class="repv-list">
+                                    <li><i class="fas fa-check" aria-hidden="true"></i> Сплит по пациенту, не по записи</li>
+                                    <li><i class="fas fa-check" aria-hidden="true"></i> Внешний датасет другой клиники</li>
+                                    <li><i class="fas fa-check" aria-hidden="true"></i> Числа не округляем вверх</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- VERDICT RIBBON -->
+    <section class="block ribbon-block">
+        <div class="wrap">
+            <div class="verdict reveal" id="verdict">
+                <span class="v-id"><span class="rdot high"></span> Айжан К. · PX-4829</span>
+                <span class="v-sep"></span>
+                <span class="v-chip" data-go="#rings" id="v-title">— · ожидание анализа</span>
+                <span class="v-chip" data-go="#rings" id="v-conf">уверенность —</span>
+                <span class="v-chip" data-go="#rings" id="v-risk">риск 10 лет —</span>
+                <span class="v-chip" data-go="#leads" id="v-dx">диагноз —</span>
+                <span class="v-note" id="v-note">σ_top1 — · согласие ансамбля</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 12-LEAD REVEAL -->
+    <section class="block" id="leads">
+        <div class="wrap">
+            <div class="sec-head reveal">
+                <span class="eyebrow">Вход модели</span>
+                <h2>То, что модель видит на входе</h2>
+                <p>ЭКГ — это 12 отведений по 10 секунд при 100 Гц. Не картинка, а сигнал. Наведите курсор на любое отведение.</p>
+            </div>
+            <div class="lead-grid reveal" id="lead-grid" aria-hidden="true"></div>
+        </div>
+    </section>
+
+    <!-- HONESTY / VALIDATION -->
+    <section class="block" id="validation">
+        <div class="wrap">
+            <div class="vband reveal">
+                <div class="sec-head" style="margin-bottom:0">
+                    <span class="eyebrow eyebrow-line">Не теория — измеренные цифры</span>
+                    <h2>Точность ≈90% — <span class="grad">и доказана на чужой больнице</span></h2>
+                    <p>Главный результат: <b>0.93 macro-AUROC на данных ДРУГОГО госпиталя</b> — +10.3 пункта против модели, обученной на одной клинике. А чтобы цифрам можно было верить, мы меряем строго: сплит по пациенту и покрытие пишем измеренное, а не целевое.</p>
+                </div>
+                <div class="honesty">
+                    <div class="drop-bars">
+                        <div class="dbar reveal"><div class="db-track"><div class="db-fill" data-w="100"></div></div><div class="db-meta"><b data-count="0.928">0</b> · Macro-AUROC · внешний госпиталь <em>+10.3 пп · главный результат</em></div></div>
+                        <div class="dbar reveal" data-d="1"><div class="db-track"><div class="db-fill" data-w="80"></div></div><div class="db-meta"><b data-count="74.5">0</b><span>%</span> · Random split <em>льстит — допускает утечку</em></div></div>
+                        <div class="dbar reveal" data-d="2"><div class="db-track"><div class="db-fill" data-w="74"></div></div><div class="db-meta"><b data-count="69.0">0</b><span>%</span> · Patient-disjoint · fold 10 <em>честная, n=1617</em></div></div>
+                        <div class="gap-bracket reveal" data-d="2" aria-hidden="true">
+                            <svg viewBox="0 0 16 54" preserveAspectRatio="none"><path d="M2 4 H12 V50 H2"></path></svg>
+                            <span class="gap-val">−<b data-count="5.6">0</b> п.п. оптимизм-гэп</span>
+                        </div>
+                    </div>
+                    <div class="cov reveal" data-d="2">
+                        <div class="cov-gauge">
+                            <svg viewBox="0 0 120 120" aria-hidden="true"><circle class="ring-bg" cx="60" cy="60" r="52"></circle><circle class="ring-fg cov" id="cov-ring" cx="60" cy="60" r="52"></circle></svg>
+                            <div class="ring-c"><b><span data-count="88.9">0</span><small>%</small></b><span>покрытие</span></div>
+                        </div>
+                        <div class="cov-annot"><i class="fas fa-arrow-turn-up" aria-hidden="true"></i> −1.1 п.п. — и мы это пишем.</div>
+                        <p class="cov-tip">Измерено 88.9% против цели 90%. Не округляем вверх.</p>
+                    </div>
+                </div>
+                <div style="margin-top:34px"><a class="btn btn-outline" href="validation.html">Полный отчёт о валидации <i class="fas fa-arrow-right" style="font-size:11px" aria-hidden="true"></i></a></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- METHODOLOGY -->
+    <section class="block" id="methodology">
+        <div class="wrap">
+            <div class="sec-head reveal">
+                <span class="eyebrow">Методология</span>
+                <h2>Patient-disjoint и кросс-госпиталь</h2>
+                <p>Слева — величина утечки случайного сплита на сигнальной модели. Справа — главный результат: мульти-датасетная модель обобщается на <em>другой</em> госпиталь.</p>
+            </div>
+            <div class="metric-2 reveal">
+                <article class="m2-card">
+                    <span class="m2-eyebrow">Signal ensemble · 4 класса</span>
+                    <div class="m2-row">
+                        <div class="m2-cell"><span>Random</span><b>74.5%</b><small>n=2426</small></div>
+                        <div class="m2-div"></div>
+                        <div class="m2-cell"><span>Fold 10 · чистый ретрейн</span><b class="m2-fold">69.0%</b><small>n=1617</small></div>
+                    </div>
+                    <p class="m2-foot">Δ = −5.6 п.п.</p>
+                </article>
+                <article class="m2-card">
+                    <span class="m2-eyebrow">Multi-label · 56 кодов · кросс-госпиталь</span>
+                    <div class="m2-row">
+                        <div class="m2-cell"><span>PTB-XL fold 10</span><b>0.877</b><small>macro AUROC · свой</small></div>
+                        <div class="m2-div"></div>
+                        <div class="m2-cell"><span>Chapman/Ningbo</span><b class="m2-fold">0.928</b><small>macro AUROC · внешний</small></div>
+                    </div>
+                    <p class="m2-foot">+10.3 п.п. vs одно-источниковый бейзлайн (0.825) на 21 коде, что размечает внешний набор (ритм/проводимость) — мульти-датасетная модель в проде</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- BOUNDARIES + CTA -->
+    <section class="block" id="cta" style="padding-top:0">
+        <div class="wrap">
+            <div class="boundaries reveal">
+                <span class="eyebrow">Границы</span>
+                <h2>Что SYNERA — <span class="grad">не</span></h2>
+                <div class="bd-list">
+                    <div class="bd"><i class="fas fa-xmark" aria-hidden="true"></i> Не медицинское изделие.</div>
+                    <div class="bd"><i class="fas fa-xmark" aria-hidden="true"></i> Не замена врачу.</div>
+                    <div class="bd"><i class="fas fa-xmark" aria-hidden="true"></i> Не диагноз — оценка риска с интервалами.</div>
+                </div>
+            </div>
+            <div class="cta-final reveal">
+                <h2>Откройте. Загрузите ЭКГ. Без регистрации.</h2>
+                <p>Демо-режим — попробуйте на примерах прямо в приложении.</p>
+                <a class="btn btn-primary btn-lg" href="/app">Открыть приложение <i class="fas fa-arrow-right" style="font-size:12px" aria-hidden="true"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="wrap footer-inner">
+            <div>
+                <a class="brand" href="/">
+                    <span class="brand-mark"><svg viewBox="0 0 36 36"><path d="M5 19 H11 L14 11 L19.5 27 L22.5 19 H31" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+                    SYNERA
+                </a>
+                <p class="muted">Клинический AI для ЭКГ, фиброза печени и ХВГ-screening. Исследовательский проект.</p>
+            </div>
+            <div class="footer-cols">
+                <div class="footer-col">
+                    <h4>Продукт</h4>
+                    <a href="/app">Дашборд</a>
+                    <a href="ecg-analysis.html">ЭКГ-анализ</a>
+                    <a href="hepatology.html">Гепатология</a>
+                    <a href="validation.html">Валидация</a>
+                    <a href="methodology.html">Методология</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Данные</h4>
+                    <a href="https://doi.org/10.1038/s41597-020-0495-6" target="_blank" rel="noopener">PTB-XL</a>
+                    <a href="https://doi.org/10.1109/JBHI.2020.3022989" target="_blank" rel="noopener">Strodthoff 2021</a>
+                    <a href="methodology.html">Воспроизводимость</a>
+                </div>
+            </div>
+        </div>
+        <div class="wrap"><p class="disclaimer">⚠ Демонстрационный / исследовательский инструмент. Не является медицинским изделием и не предназначен для клинической диагностики или принятия врачебных решений.</p></div>
+    </footer>
+
+    <div class="cursor" id="cursor" aria-hidden="true">
+        <div class="cursor-dot"></div>
+        <div class="cursor-ring"><span class="cursor-label"></span></div>
+    </div>
+
+    <script src="cardiogram.js" defer></script>
+    <script src="playground.js" defer></script>
+    <script src="landing.js" defer></script>
+</body>
+</html>
