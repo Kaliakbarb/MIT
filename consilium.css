@@ -1,0 +1,207 @@
+.consilium-page {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.consilium-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.consilium-head .eyebrow,
+.patient-context .eyebrow {
+  color: var(--text-3);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.consilium-head h1 {
+  margin-top: 6px;
+  font-size: 34px;
+  line-height: 1.08;
+  letter-spacing: 0;
+  font-weight: 650;
+}
+
+.consilium-head h1 span { color: var(--text-3); }
+
+.consilium-head p {
+  max-width: 740px;
+  margin-top: 10px;
+  color: var(--text-3);
+  font-size: 14px;
+}
+
+.patient-context {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) minmax(260px, 360px) auto;
+  gap: 14px;
+  align-items: center;
+  padding: 16px 20px;
+}
+
+.patient-context strong {
+  display: block;
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 650;
+}
+
+.patient-context p {
+  color: var(--text-3);
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+.patient-context select {
+  width: 100%;
+  min-height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--text);
+  padding: 9px 10px;
+}
+
+.organ-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.organ-card {
+  padding: 18px;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.organ-card header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-3);
+  font-size: 13px;
+}
+
+.organ-card header i {
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  color: var(--accent);
+  background: var(--surface);
+}
+
+.organ-card header span {
+  color: var(--text);
+  font-weight: 650;
+  margin-right: auto;
+}
+
+.organ-card header a {
+  color: var(--text-3);
+}
+
+.organ-card header a:hover { color: var(--accent); }
+
+.organ-card strong {
+  font-size: 20px;
+  line-height: 1.2;
+  color: var(--text);
+}
+
+.organ-card p {
+  color: var(--text-3);
+  font-size: 13px;
+}
+
+.organ-card[data-band="high"] { border-color: rgba(208, 95, 95, 0.42); }
+.organ-card[data-band="elevated"],
+.organ-card[data-band="indeterminate"] { border-color: rgba(212, 160, 74, 0.42); }
+.organ-card[data-band="low"] { border-color: rgba(76, 183, 130, 0.28); }
+
+.consilium-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 5px 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text-2);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.consilium-body {
+  padding: 20px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 0.9fr);
+  gap: 16px;
+}
+
+.final-call,
+.axis-card {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel);
+  padding: 18px;
+}
+
+.final-call span,
+.axis-card span {
+  display: block;
+  color: var(--text-3);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.final-call strong,
+.axis-card strong {
+  display: block;
+  color: var(--text);
+  font-size: 22px;
+  line-height: 1.2;
+  margin-bottom: 10px;
+}
+
+.final-call p,
+.axis-card p,
+.axis-card li {
+  color: var(--text-3);
+  font-size: 13px;
+}
+
+.axis-card ul {
+  margin-top: 12px;
+  padding-left: 18px;
+}
+
+.axis-card[data-active="true"] {
+  border-color: rgba(212, 160, 74, 0.42);
+  background: rgba(212, 160, 74, 0.08);
+}
+
+@media (max-width: 980px) {
+  .patient-context,
+  .organ-grid,
+  .consilium-body {
+    grid-template-columns: 1fr;
+  }
+}
